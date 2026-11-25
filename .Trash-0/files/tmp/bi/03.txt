@@ -1,0 +1,525 @@
+# DECK 3: 03双序列比对-1-全局比对2026秋.pptx  (77 slides)
+
+===== SLIDE 1 =====
+双序列比对
+高建召
+
+===== SLIDE 2 =====
+致谢
+此PPT内容参考了杨建益老师的PPT。
+
+===== SLIDE 3 =====
+双序列比对的算法
+Dot Matrix，点阵法动态规划算法：Global: Needleman-WunschLocal:	Smith-WatermanWord or k-tuple算法：FASTA,  BLAST
+
+===== SLIDE 4 =====
+为什么要做序列比对
+>Protein bMNIFEMLRIDEGLRLKIYKDTEGYYTIGIGHLLTKSPS  LNAAAKSELDKAIGRNTNGVITKDEAEKLFNQDVDA  AVRGILRNAKLKPVYDSLDAVRRAALINMVFQMGET  GVAGFTNSLRMLQ
+>Protein aMVLSEGEWQLVLHVWAKVEADVAGHGQD  ILIRLFKSHPETLEKFDRVKHLKTEAEMKAS  EDLKKHGVTVLTALGAILKKKGHHEAELKP  LAQSHATKHKIPIKY
+Do they have similar structure and function?
+I. Sequence alignment can help establish relationship of two proteins (roughly  speaking, sequences having higher sequence identity usually come from the  same ancestor and therefore have similar structure and function).These proteins are called homology.
+
+===== SLIDE 5 =====
+为什么做序列比对
+Can I find proteins in the  databases, which are  homologous to my
+>Query sequenceMVLSEGEWQLVLHVWAKVEADVAGHGQD  ILIRLFKSHPETLEKFDRVKHLKTEAEMKAS  EDLKKHGVTVLTALGAILKKKGHHEAELKP  LAQSHATKHKIPIKY
+unknown protein?
+Sequence databases
+(GeneBank for DNA sequences)  (UniProt for protein sequences)  (PDB for protein structures)
+II. Sequence alignment can help identify homologies from known databases,  to generate structure and function predictions for the unknown proteins.
+
+===== SLIDE 6 =====
+目前已有的核酸、蛋白质数据库
+GeneBank: contains ~950M DNA sequencesUniProt Swiss-Prot/trEMBL: ~100M protein sequences (~550K with  known function)Protein Data Bank (PDB): contains ~140k protein structures
+
+===== SLIDE 7 =====
+序列比对的目的
+Purposes:Study the relationship between two proteinsScan a database with a query sequence and identify possible structure  and function of the query proteinIf two sequences are simiar,the following may be trueThe proteins may share a common evolutionary originThe proteins may have a similar 3-dimensional structureThe proteins may have the same or related function
+
+===== SLIDE 8 =====
+序列比对是什么
+Identical
+Example 1: Sequence identity=78%
+residue pair
+-MVLSEGEWQLVLHVWAKVEADVAGHGQDILIRLFKSHPETLEKFDRVKHLKTEAEMKASEDLKKHGVTVL:: :::: :: :: ::::: :::::	:::::	:::::::::	::::::::::::::::: :	::  G--LSDGEWQQVLNVWGKVEADIAGHGQEVLIRLFTGHPETLEKFDKFKHLKTEAEMKASEDLKKTGTVVLInsertionsExample 2: Sequence identity=22%MNIFEMLRIDEG-------LRLKIYKDTEGYYTIGIGHLLTKSPSLNAAAKSELDKAIGRNTNGVITKDEAEKLFNQDVDA::	:	:	:	:	:	:	:	: :::------MVLSEGEWQLVLHVWAKVEADVAGHGQDILIRLFKSHPE--TLEKFDRVKHL---------KTEAEMKAS-----GapsSequence identity = Number of identical residue pairs/Length of query sequence
+
+===== SLIDE 9 =====
+序列比对的原则
+We want to align as many as possible THE SAME or THE SIMILAR residuesWe do not want gaps/insertions
+Insertions
+MNIFEMLRIDEG-------LRLKIYKDTEGYYTIGIGHLLTKSPSLNAAAKSELDKAIGRNTNGVITKDEAEKLFNQDVDA::	:	:	:	:	:	:	:	: :::------MVLSEGEWQLVLHVWAKVEADVAGHGQDILIRLFKSHPE--TLEKFDRVKHL---------KTEAEMKAS-----Gaps
+
+===== SLIDE 10 =====
+序列比对的原则
+Residues of similar property  should match together
+Score for adding gap is  always negative
+AiMNIFEMLRIDEG-------LRLKIYKDTEGYYTIGIGHLLTKSPSLNAAAKSELDKAIGRNTNGVITKDEAEKLFNQDVDA::	:	:	:	:	:	:	:	: :::------MVLSEGEWQLVLHVWAKVEADVAGHGQDILIRLFKSHPE--TLEKFDRVKHL---------KTEAEMKAS-----Bi
+Gaps
+Nali: number of aligned residue pairs
+Ai: amino acid identity of the i-th aligned resideu at the first sequence  Bi: amino acid identity of the i-th aligned resideu at the second sequence  M(Ai, Bi): preference score of matching between amino acids Ai and Bi
+
+===== SLIDE 11 =====
+打分矩阵
+Score   M ( Ai , Bi )  GapPenaltyi 1The simplest scoring matrix is the unit matrix:
+Nali
+1	0		00	1		0	
+0
+ 2020
+M  
+0
+1
+
+Question: What will be the problem if we use this simple solution?Answer: All the similarity due to the evolutionary mutation has been neglected.
+
+===== SLIDE 12 =====
+如何构造打分矩阵
+
+===== SLIDE 13 =====
+经常使用的打分矩阵  PAM250， BLOSUM62
+PAM250DAYHOFF et al, 1978
+Top: original amino acidSide: replacement amino acid
+BLOSUM62Henikoff and Henikoff, PNAS, 1992Questions:How these matrices are obtained?What are the differences between PAM and BLOSUM?
+
+===== SLIDE 14 =====
+Margaret Dayhoff (1925‐1983, US)
+1945 ‐ BA in Mathematics at NYU  1948 ‐ PhD in Quantum Chemistry1965 ‐ Protein Atlas (65 proteins) (PIR)the first public comprehensive, computerised  and publicly available database of protein  sequences. It is the model for GenBank and  many other molecular databases.1980 ‐ President of Biophysical Societyone of the founders in the field of  Bioinformaticshttps://www.whatisbiotechnology.org/index.php/people/summary/Dayhoff
+
+===== SLIDE 15 =====
+Altas of protein sequence and structure 蛋白质序列和结构图谱
+
+===== SLIDE 16 =====
+打分矩阵 PAM（Percent Accepted Mutation）
+PAM (Percent Accepted Mutation) Matrix (by Dayhoff et al 1978):
+Reference: DAYHOFF, M., R. SCHWARTZ, AND B. ORCUTT. 1978. A model of  evolutionary change in proteins. Pages 345--352 in Atlas of protein sequence  and structure, Volume 5 (M. Dayhoff, ed.). National Biomedical Research  Foundation, Washington, D.C.Database: 1,572 mutations, 75 homologous sequence groups, minimum sequence  identity is 85%Purpose: to derive the mutation probability between amino acids
+
+===== SLIDE 17 =====
+打分矩阵 PAM
+Three steps for building the PAM matrix:
+Step 1: Counting the number of mutations  Step 2: Relative mutability of amino acidStep 3: Probability of mutations between amino acids (Mij), and  Normalization.
+
+===== SLIDE 18 =====
+打分矩阵 PAM
+Step 1: Counting the number of mutations
+考虑了这样一个问题：当比对两个同源蛋白序列时，可观察到哪些特定的氨基酸替换？
+可接受点突变（accepted point mutation）：在蛋白质中被自然选择接受的单个氨基酸替换。可接受点突变简称为 PAM
+18
+[NOTES] 看书，重新找图。
+
+===== SLIDE 19 =====
+打分矩阵 PAM
+谷氨酸-天冬氨酸
+Glu-Asp
+甘氨酸-色氨酸
+注1：总观测到1572次替换，表中次数均为可接受点突变数目乘以10。注2： 绿颜色的方框是经常出现的替换。例如Glu-Asp 谷氨酸替换天冬氨酸注3： 橙色的方框是很少发生的替换。例如Gly-Trp 甘氨酸和色氨酸之间的替换。
+Gly-Trp
+19
+[NOTES] 这个公式没太确定。。
+
+===== SLIDE 20 =====
+PAM 打分矩阵
+多了一个CH2
+Two factors may influence the mutation numbers:
+Codon reason: mutation between Glu (=GAA, GAG) and Asp (=GAC, GAU) is the  most frequent （谷氨酸、天冬氨酸）Physical reason: due to the volume difference, mutation between Gly (=GGG)  and Trp (=UGG) never happens （甘氨酸、色氨酸）
+
+===== SLIDE 21 =====
+PAM 打分矩阵
+Step 2: Relative mutability of amino acid
+Example:
+序列1序列2
+改变的次数出现的次数相对突变性
+
+===== SLIDE 22 =====
+PAM 打分矩阵
+丙氨酸 Ala 的值被设定为100
+
+===== SLIDE 23 =====
+PAM 打分矩阵
+Step 3: Probability of mutations between amino acids (Mij)
+
+===== SLIDE 24 =====
+具体看如何得到这个公式
+
+===== SLIDE 25 =====
+打分矩阵 PAM
+25
+
+===== SLIDE 26 =====
+打分矩阵 PAM
+26
+
+===== SLIDE 27 =====
+PAM 打分矩阵
+Step 3: Probability of mutations between amino acids (Mij)
+
+===== SLIDE 28 =====
+Mij ( j  i)突变概率矩阵
+j
+PAM1
+Asymmetric?
+i
+For clarity, the values have been multiplied by 10000。例如  9867 表示在这个进化区间内， 氨基酸Ala，仍是Ala 发生的概率为98.67%。
+
+===== SLIDE 29 =====
+From PAM1 to PAM2, PAM100, PAM250, etc…
+
+===== SLIDE 30 =====
+From PAM1 to PAM2, PAM250, etc…
+PAM1 相当于所有氨基酸平均有1%发生了变化。PAM250 表示一种进化距离，数字越大，进化距离越远。注意：PAM与进化时间之间没有大致对应关系，因为不同蛋白质家族的进化速率不同。
+[NOTES] 当两序列进行相似性比较时，不知道进化时间是恰当的。
+
+===== SLIDE 31 =====
+PAM250：应用最广的替换矩阵
+For clarity, the values have been multiplied by 100
+
+===== SLIDE 32 =====
+Interpretation of the PAM250 matrix
+
+===== SLIDE 33 =====
+PAM250 对数几率矩阵Log-odds of PAM250在实际使用过程中，我们使用PAM250的对数几率矩阵。
+在实际应用中，我们想知道，出现这对氨基酸，是否比随机碰巧对上更常见？我们需要将这个概率换位比对分数。
+Pi: Probability of ai in sequences，氨氨基酸i的背景频率。Log-odds matrix backs to symmetric
+
+===== SLIDE 34 =====
+什么是log-odds
+半胱氨酸-半胱氨酸
+
+===== SLIDE 35 =====
+为什么使用log-odds
+
+===== SLIDE 36 =====
+BLOSUM：BLOcks SUbstitution Matrix
+
+===== SLIDE 37 =====
+Scoring matrix BLOSUM
+Henikoff S, Henikoff JG. Amino acid substitution matrices from protein  blocks. Proc Natl Acad Sci U S A. 1992 Nov 15;89(22):10915-9
+Jorja G. Henikoff
+Steve HenikoffHHMI Investigator  NAS member
+
+===== SLIDE 38 =====
+Henikoff
+38
+
+===== SLIDE 39 =====
+BLOSUM 打分矩阵
+直接利用多序列比对分析亲缘关系较远的蛋白质，而不是用近源蛋白序列。优点：符合实际观测结果；缺点：不能与进化挂钩。总体上来说，BLOSUM矩阵比PAM矩阵更适合生物学关系的分析和局部相似性搜索。
+
+===== SLIDE 40 =====
+BLOSUM
+Step 1: Count frequency table fij
+A block of known conserved sequences (gapless):
+1,2,...,                                                           w
+1…s
+LVLHVWAKVEADVAGHGQDILIRLFKSHPETLE  LVLWDWAKVEADVAGHGQDILIRLFKSHPETLE  LDLHVWAKVGGDVAGHGQAALIRLFKSHPETLE  LCLHVWAKVEADVAGGGQGGLIRLFKSHPETLE  DVLHVWAKVEADVAGHGQDILIRLFKSHPETLE  LVLHVWAKVEADVAGHGQDILIRLFKSHPETLE
+DD，DA，DG，DD，DDDA，DG，DD，DDAG，AD，ADGD，GDDD
+DD pairs: 6DA pairs: 4DG pairs: 4AG pairs: 1Total pairs at this column: 6x5/2=15
+
+===== SLIDE 41 =====
+Scoring matrix BLOSUM
+Step 2: Calculate the observed occurrence probability qij
+Probability of occurrence of each i-j pairs:
+Comparison with PAM
+
+===== SLIDE 42 =====
+Scoring matrix BLOSUM
+Step 3: Calculate the expected occurrence probability eij
+1. Probability of occurrence of the i-th amino acid:
+2. Expected probability of i-j pairs（在完全独立的情况下）:
+
+===== SLIDE 43 =====
+Scoring matrix BLOSUM
+Step 4: Calculate the log-odds matrix Sij
+Comparison with PAM
+
+===== SLIDE 44 =====
+Scoring matrix BLOSUM62
+Sequence identity of the blocks is at least 62%
+Sij<0, probability is less than expected  Sij>0, probability is more than expected
+
+===== SLIDE 45 =====
+BLOSUM vs. PAM
+BLOSUM系列比PAM系列好
+
+===== SLIDE 46 =====
+空位罚分
+
+===== SLIDE 47 =====
+Gap penalty
+What is alignment gap?MVLSEGEWQLVLHVWAKVEADVAGHGQDILIRLFKSHPETLEKFDRVKHLKTEAEMKASEDLK  SLEWMVNWAMVNWAAVV-------DDFYQELFKAHPEYQNKFGFFKAHPEYQNKFGFKGVALG
+Gap opening
+Gap extension
+Gap penalty:w(k )  a  b(k  1)a: gap-opening penaltyb: gap-entension penalty (usually b≤ a )k: length of the gaps
+[TABLE] 空位罚分a | 空位扩展b | 比对影响 | 适用 | 大 | 大 | 极少插入和缺失 | 非常相关蛋白质间的比对 | 大 | 小 | 少量大块插入 | 整个功能域可能插入的情况 | 小 | 大 | 大量小块插入 | 亲缘关系较远的蛋白质同源性分析
+
+===== SLIDE 48 =====
+Gap penalty
+Question：
+For a given score matrix and gap penalty protocol, how to find the  best alignment of two protein sequences?
+
+===== SLIDE 49 =====
+动态规划算法-全局比对
+Global alignment: Needleman-Wunsch
+
+===== SLIDE 50 =====
+Needleman-Wunsch’s dynamic programming (DP) idea
+Given an n-character sequence x, and an m-character sequence yConstruct an (n+1)x(m+1) matrix F(0…n, 0…m)F(i,j)=score of the best alignment between x[1…i] and y[1…j]
+A	G	C
+A
+AA
+score of the best alignment  between AAA and AG
+C
+
+===== SLIDE 51 =====
+Iteration formula
+F (i  1, j  1)  s( xi , y j )
+
+F (i, j)  max F (i  1, j)  g
+F (i, j  1)  g
+
+F (i  1, j  1) s( xi , y j )
+F (i  1, j)g
+F (i, j  1)  g
+F (i, j)
+
+===== SLIDE 52 =====
+Two steps in Needleman-Wunsch algorithm
+Step 1: Fill in the matrix F iteratively
+
+===== SLIDE 53 =====
+Two steps in Needleman-Wunsch algorithm
+Step 2: Traceback to find the optimal alignment
+x:	AAAC  y:	AG-C
+
+===== SLIDE 54 =====
+具体来看如何计算
+
+===== SLIDE 55 =====
+Two steps in Needleman-Wunsch algorithm
+Gap penalty: g=-2  extension = opening
+Step 1: Fill in the matrix F iteratively
+y
+Draw an (n+1)x(m+1) matrix F(o…n, o…m) first	A	G	C
+AAA  C
+x
+
+===== SLIDE 56 =====
+Initialize the 1st column and 1st row
+Gap penalty: g=-2  extension = opening
+
+===== SLIDE 57 =====
+Begin filling in column-wise or row-wise order
+Gap penalty: w(k)=-2k
+
+===== SLIDE 58 =====
+filling…
+1,	if	xi  y j
+Gap penalty: -2  extension = opening
+s( x , y ) 
+
+i
+j
+1,	otherwise
+
+===== SLIDE 59 =====
+finally
+Gap penalty: -2  extension = opening
+if	xi  y j
+s( x , y )  1,
+i	j
+1,	otherwise
+
+
+===== SLIDE 60 =====
+Traceback
+Step 2: Traceback to find the optimal alignment
+Starting from F(n,m) to F(0,0)
+x:	Cy:	C
+AA
+AC
+[TABLE] A | G | C | 0 | -2 | -4 | -6 | -2 | 1 | -1 | -3 | -4 | -1 | 0 | -2 | -6 | -3 | -2 | -1 | -8 | -5 | -4 | -1
+
+===== SLIDE 61 =====
+Traceback
+Step 2: Traceback to find the optimal alignment
+x:	AC  y:	-C
+AA
+AC
+[TABLE] A | G | C | 0 | -2 | -4 | -6 | -2 | 1 | -1 | -3 | -4 | -1 | 0 | -2 | -6 | -3 | -2 | -1 | -8 | -5 | -4 | -1
+
+===== SLIDE 62 =====
+Traceback
+Step 2: Traceback to find the optimal alignment
+x:	AAC  y:	G-C
+AA
+AC
+[TABLE] A | G | C | 0 | -2 | -4 | -6 | -2 | 1 | -1 | -3 | -4 | -1 | 0 | -2 | -6 | -3 | -2 | -1 | -8 | -5 | -4 | -1
+
+===== SLIDE 63 =====
+Traceback
+Step 2: Traceback to find the optimal alignment
+one optimal alignment
+x:	AAAC  y:	AG-C
+AA
+AC
+[TABLE] A | G | C | 0 | -2 | -4 | -6 | -2 | 1 | -1 | -3 | -4 | -1 | 0 | -2 | -6 | -3 | -2 | -1 | -8 | -5 | -4 | -1
+
+===== SLIDE 64 =====
+Traceback
+Step 2: Traceback to find the optimal alignment
+another optimal alignment
+A	G	C
+x:	AAAC  y:	-AGC
+AA
+AC
+[TABLE] 0 | -2 | -4 | -6 | -2 | 1 | -1 | -3 | -4 | -1 | 0 | -2 | -6 | -3 | -2 | -1 | -8 | -5 | -4 | -1
+
+===== SLIDE 65 =====
+特殊情况处理
+
+===== SLIDE 66 =====
+Equally optimal alignments
+can use preference ordering over paths when doing  traceback
+3
+1
+2
+2
+lowroad
+highroad
+1
+3
+
+===== SLIDE 67 =====
+Another example
+Gap penalty: g=-2  extension = opening
+if	xi  y j
+s( x , y )  2,
+i	j
+3,	otherwise
+
+C
+T
+A
+A
+T
+G
+A
+T
+C
+A  CG  C  A  TC  A
+
+===== SLIDE 68 =====
+Another example
+Gap penalty: g=-2  extension = opening
+if	xi  y j
+s( x , y )  2,
+i	j
+3,	otherwise
+
+C
+T
+A
+A
+T
+G
+A
+T
+C
+A  CG  C  A  TC  A
+[TABLE] 0 | -2 | -4 | -6 | -8 | -10 | -12 | -14 | -16 | -18 | -2 | 2 | -4 | 0 | -6 | -2 | -8 | -4 | -10 | -6 | -12 | -8 | -14 | -10 | -16 | -12
+
+===== SLIDE 69 =====
+Another example
+Gap penalty: g=-2  extension = opening
+if	xi  y j
+s( x , y )  2,
+i	j
+3,	otherwise
+
+C
+T
+A
+A
+T
+G
+A
+T
+C
+A  CG  C  A  TC  A
+[TABLE] 0 | -2 | -4 | -6 | -8 | -10 | -12 | -14 | -16 | -18 | -2 | 2 | 0 | -4 | 0 | 4 | -6 | -2 | 2 | -8 | -4 | 0 | -10 | -6 | -2 | -12 | -8 | -4 | -14 | -10 | -6 | -16 | -12 | -8
+
+===== SLIDE 70 =====
+Another example
+Gap penalty: g=-2  extension = opening
+if	xi  y j
+s( x , y )  2,
+i	j
+3,	otherwise
+
+C
+T
+A
+A
+T
+G
+A
+T
+C
+0
+-2	-4	-6	-8	-10	-12	-14	-16	-18
+A  C  GC	-8	-4	0	-1	2A	-10	-6	-2	-3	0T	-12	-8	-4	0	-2C  A
+-2	2
+0
+-2	-4
+-4	0
+4
+2
+0
+-6	-2	2
+1
+4
+-14	-10	-6	-2	-3
+-16	-12	-8	-4	-5
+
+===== SLIDE 71 =====
+Another example
+Gap penalty: g=-2  extension = opening
+if	xi  y j
+s( x , y )  2,
+i	j
+3,	otherwise
+
+A  CG  C  A  TC  A
+[TABLE] A | C | T | G | A | T | T | C | A | 0 | -2 | -4 | -6 | -8 | -10 | -12 | -14 | -16 | -18 | -2 | 2 | 0 | -2 | -4 | -6 | -8 | -10 | -12 | -14 | -4 | 0 | 4 | 2 | 0 | -2 | -4 | -6 | -8 | -10 | -6 | -2 | 2 | 1 | 4 | 2 | 0 | -2 | -4 | -6 | -8 | -4 | 0 | -1 | 2 | 1 | -1 | -3 | 0 | -2 | -10 | -6 | -2 | -3 | 0 | 4 | 2 | 0 | -2 | 2 | -12 | -8 | -4 | 0 | -2 | 2 | 6 | 4 | 2 | 0 | -14 | -10 | -6 | -2 | -3 | 0 | 4 | 3 | 6 | 4 | -16 | -12 | -8 | -4 | -5 | -2 | 2 | 1 | 4 | 8
+
+===== SLIDE 72 =====
+Another example
+one optimal alignmentx:	AC-GCA-TCA  y:	ACTG-ATTCA
+A  CG  C  A  TC  A
+[TABLE] A | C | T | G | A | T | T | C | A | 0 | -2 | -4 | -6 | -8 | -10 | -12 | -14 | -16 | -18 | -2 | 2 | 0 | -2 | -4 | -6 | -8 | -10 | -12 | -14 | -4 | 0 | 4 | 2 | 0 | -2 | -4 | -6 | -8 | -10 | -6 | -2 | 2 | 1 | 4 | 2 | 0 | -2 | -4 | -6 | -8 | -4 | 0 | -1 | 2 | 1 | -1 | -3 | 0 | -2 | -10 | -6 | -2 | -3 | 0 | 4 | 2 | 0 | -2 | 2 | -12 | -8 | -4 | 0 | -2 | 2 | 6 | 4 | 2 | 0 | -14 | -10 | -6 | -2 | -3 | 0 | 4 | 3 | 6 | 4 | -16 | -12 | -8 | -4 | -5 | -2 | 2 | 1 | 4 | 8
+
+===== SLIDE 73 =====
+Another example
+another optimal alignmentx:	AC-GCAT-CA  y:	ACTG-ATTCA
+A  CG  C  A  TC  A
+[TABLE] A | C | T | G | A | T | T | C | A | 0 | -2 | -4 | -6 | -8 | -10 | -12 | -14 | -16 | -18 | -2 | 2 | 0 | -2 | -4 | -6 | -8 | -10 | -12 | -14 | -4 | 0 | 4 | 2 | 0 | -2 | -4 | -6 | -8 | -10 | -6 | -2 | 2 | 1 | 4 | 2 | 0 | -2 | -4 | -6 | -8 | -4 | 0 | -1 | 2 | 1 | -1 | -3 | 0 | -2 | -10 | -6 | -2 | -3 | 0 | 4 | 2 | 0 | -2 | 2 | -12 | -8 | -4 | 0 | -2 | 2 | 6 | 4 | 2 | 0 | -14 | -10 | -6 | -2 | -3 | 0 | 4 | 3 | 6 | 4 | -16 | -12 | -8 | -4 | -5 | -2 | 2 | 1 | 4 | 8
+
+===== SLIDE 74 =====
+作业
+
+===== SLIDE 75 =====
+全局比对作业HomeWork
+sequence x: GAATTCAGTTAsequence y: GGATCGA
+2,	if	xi  y j
+Score matrix:
+s( xi , y j ) 
+
+1,	otherwise
+Gap penalty: g=-2  extension = opening
+请按照全局比对算法，列出打分矩阵，回溯路径，以及比对后的结果。
+
+===== SLIDE 76 =====
+补充探索：
+了解 Dot Matrix，点阵法
+
+===== SLIDE 77 =====
+Questions to think about
+How about local alignment?What happens if gap opening penalty and gap extension  penalties are not equal?Paper to read :T F Smith & M S Waterman, Identification of common molecular  subsequences. J Mol Biol (1981) 147, 195-197.O. Gotoh. An improved algorithm for matching biological sequences. Journal  of Molecular Biology 162 705-708 1982.

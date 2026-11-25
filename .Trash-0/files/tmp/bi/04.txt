@@ -1,0 +1,442 @@
+# DECK 4: 03双序列比对-2-局部比对2026秋.pptx  (51 slides)
+
+===== SLIDE 1 =====
+双序列比对-局部比对算法
+高建召
+
+===== SLIDE 2 =====
+致谢
+此PPT内容参考了杨建益老师的PPT。https://yanglab.nankai.edu.cn/
+
+===== SLIDE 3 =====
+双序列比对的算法
+Dot Matrix，点阵法动态规划算法：Global: Needleman-WunschLocal:	Smith-WatermanWord or k-tuple算法：FASTA,  BLAST
+
+===== SLIDE 4 =====
+动态规划算法：局部比对
+Local alignment: Smith-Waterman
+
+===== SLIDE 5 =====
+Smith-Waterman algorithm
+For generating optimal local alignment?T F Smith & M S Waterman, Identification of common molecular subsequences. J  Mol Biol (1981) 147, 195-197.
+Michael S. Waterman (1942-)  University of Southern California (USC)
+Temple F. Smith (1939-)  Boston University
+
+===== SLIDE 6 =====
+Michael S.	Waterman (1942-)
+
+===== SLIDE 7 =====
+Two	differences between SW and NW
+1. Non-negative scoresF (i  1, j  1)  s( xi , y j )F (i  1, j)  g
+注意，初始化时，按照迭代公式为0
+F (i, j)  max 
+F (i, j  1)  g
+0
+F (i  1, j  1) s( xi , y j )
+F (i  1, j)g
+F (i, j  1)  g
+F (i, j)
+
+===== SLIDE 8 =====
+Two	differences between SW and NW
+2. Traceback starts at the highest scoring matrix cell and  proceeds until a cell with score zero is encountered.从表格中找到得分最大的那个项然后回溯，直到得分是0的那一项为止。
+
+===== SLIDE 9 =====
+Example
+if	xi  y j
+Gap penalty: g=-2  extension = openingG	A
+s( x , y )  1,
+i	j
+1,	otherwise
+
+A
+A
+TT  AA  G
+
+===== SLIDE 10 =====
+Example
+if	xi  y j
+Gap penalty: g=-2  extension = openingG	A
+s( x , y )  1,
+i	j
+1,	otherwise
+
+A
+A
+Initialization
+TT  AA  G
+[TABLE] 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+
+===== SLIDE 11 =====
+Example
+if	xi  y j
+Gap penalty: g=-2  extension = openingG	A
+s( x , y )  1,
+i	j
+1,	otherwise
+
+A
+A
+Filling….
+TT  AA  G
+[TABLE] 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0
+
+===== SLIDE 12 =====
+Example
+if	xi  y j
+Gap penalty: g=-2  extension = openingG	A
+s( x , y )  1,
+i	j
+1,	otherwise
+
+A
+A
+Filling….
+TT  AA  G
+[TABLE] 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 2 | 0 | 0 | 0
+
+===== SLIDE 13 =====
+Example
+if	xi  y j
+Gap penalty: g=-2  extension = openingG	A
+s( x , y )  1,
+i	j
+1,	otherwise
+
+A
+A
+Filling….
+TT  AA  G
+[TABLE] 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 2 | 0 | 0 | 0 | 0 | 3
+
+===== SLIDE 14 =====
+Example
+if	xi  y j
+Gap penalty: g=-2  extension = openingG	A
+s( x , y )  1,
+i	j
+1,	otherwise
+
+A
+A
+Filling done
+TT  AA  G
+[TABLE] 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 0 | 1 | 2 | 0 | 1 | 0 | 0 | 0 | 3 | 1
+
+===== SLIDE 15 =====
+Example
+x:Gy:G
+y
+G
+A
+A
+A
+Traceback…
+T
+T
+x
+AA  G
+[TABLE] 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 0 | 1 | 2 | 0 | 1 | 0 | 0 | 0 | 3 | 1
+
+===== SLIDE 16 =====
+Example
+x:AG  y:AG
+y
+G
+A
+A
+A
+Traceback…
+T
+T
+x
+AA  G
+[TABLE] 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 0 | 1 | 2 | 0 | 1 | 0 | 0 | 0 | 3 | 1
+
+===== SLIDE 17 =====
+Example
+x:AAG  y:AAG
+y
+G
+A
+A
+A
+Traceback done
+T
+T
+x
+AA  G
+[TABLE] 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | 0 | 1 | 0 | 1 | 2 | 0 | 1 | 0 | 0 | 0 | 3 | 1
+
+===== SLIDE 18 =====
+Affine Gap penalty 仿射罚分
+MVLSEGEWQLVLHVWAKVEADVAGHGQDILIRLFKSHPETLEKFDRVKHLKTEAEMKASEDLK  SLEWMVNWAMVNWAAVV-------DDFYQELFKAHPEYQNKFGFFKAHPEYQNKFGFKGVALG
+Gap extensionw(k )  a  b (k  1)
+Gap openingGap penalty:
+(k  1;	a, b  0)
+k: length of continous gapsa: gap opening penaltyb: gap entension penaltyLinear gap penalty if	a=bAffine gap penalty if a!=b
+
+===== SLIDE 19 =====
+DP for affine gap penalty case
+O. Gotoh. An improved algorithm for matching biological sequences. Journal  of Molecular Biology 162 705-708 1982.Time complexity O(mn)
+
+===== SLIDE 20 =====
+带仿射罚分的全局比对
+
+===== SLIDE 21 =====
+NW-DP with	affine gap penalty
+Need 3 matrices instead of 1
+M (i, j)
+best score given that x[i] is aligned to y[j]
+Ix (i, j)
+best score given that x[i] is aligned to a gap
+I y (i, j)
+best score given that y[j] is aligned to a gap
+
+===== SLIDE 22 =====
+NW-DP with	affine gap penalty
+P29
+
+===== SLIDE 23 =====
+NW-DP with	affine gap penalty
+此处，gap opening=d,gap extention =e每一个矩阵值表现为一个状态；箭头表示状态间的转移。一个比对就是一条由状态节点连接起来的路径。
+
+===== SLIDE 24 =====
+NW-DP with	affine gap penalty
+Initialization
+
+===== SLIDE 25 =====
+NW-DP with	affine gap penalty
+TracebackStart at the largest of M(m,n) , Ix(m,n), Iy(m,n)Stop at any of M(0,0) , Ix(0,0), Iy(0,0)
+
+===== SLIDE 26 =====
+Example
+1,	if	xi  y j
+s( xi , y j ) a=-3,b=-1
+
+1,	otherwiseA
+C
+A
+C
+T
+A
+A
+T
+
+===== SLIDE 27 =====
+Example
+Filling…C
+A
+C
+A
+T
+M:0
+-∞
+-∞
+-∞
+-∞
+-∞
+Ix:-3
+-∞
+-∞
+-∞
+-∞
+-∞
+Iy:-3
+-4
+-5
+-6
+-7
+-8
+-∞A	-4-∞-∞
+-5
+A
+-∞-∞
+-6
+T
+-∞
+
+===== SLIDE 28 =====
+Example
+Filling…C
+A
+C
+A
+T
+M:0
+-∞
+-∞
+-∞
+-∞
+-∞
+Ix:-3
+-∞
+-∞
+-∞
+-∞
+-∞
+Iy:-3
+-4
+-5
+-6
+-7
+-8
+-∞
+1
+A	-4
+-∞
+-∞
+-∞
+-∞
+-3
+-5
+-2
+A
+-∞
+-∞
+-∞
+-6
+-6
+-3
+T
+-∞
+-∞
+
+===== SLIDE 29 =====
+Example
+Filling…
+A
+A
+T
+[TABLE] A | C | A | C | T | M:0 | -∞ | -∞ | -∞ | -∞ | -∞ | Ix:-3 | -∞ | -∞ | -∞ | -∞ | -∞ | Iy:-3 | -4 | -5 | -6 | -7 | -8 | -∞ | 1 | -5 | -4 | -∞ | -∞ | -∞ | -∞ | -2 | -∞ | -3 | 0 | -5 | -2 | -8 | -∞ | -∞ | -6 | -∞ | -6 | -3 | -6 | -3 | -3 | -∞ | -∞ | -9
+
+===== SLIDE 30 =====
+Example
+Filling…
+A
+A
+T
+[TABLE] A | C | A | C | T | M:0 | -∞ | -∞ | -∞ | -∞ | -∞ | Ix:-3 | -∞ | -∞ | -∞ | -∞ | -∞ | Iy:-3 | -4 | -5 | -6 | -7 | -8 | -∞ | 1 | -5 | -4 | -4 | -∞ | -∞ | -∞ | -∞ | -∞ | -2 | -3 | -∞ | -3 | 0 | -1 | -5 | -2 | -8 | -7 | -∞ | -∞ | -6 | -3 | -∞ | -6 | -3 | -1 | -6 | -3 | -3 | -4 | -∞ | -∞ | -9 | -6
+
+===== SLIDE 31 =====
+Example
+Filling…
+A
+A
+T
+[TABLE] A | C | A | C | T | M:0 | -∞ | -∞ | -∞ | -∞ | -∞ | Ix:-3 | -∞ | -∞ | -∞ | -∞ | -∞ | Iy:-3 | -4 | -5 | -6 | -7 | -8 | -∞ | 1 | -5 | -4 | -7 | -4 | -∞ | -∞ | -∞ | -∞ | -∞ | -∞ | -2 | -3 | -4 | -∞ | -3 | 0 | -1 | -4 | -5 | -2 | -8 | -7 | -10 | -∞ | -∞ | -6 | -3 | -4 | -∞ | -6 | -3 | -1 | -2 | -6 | -3 | -3 | -4 | -7 | -∞ | -∞ | -9 | -6 | -4
+
+===== SLIDE 32 =====
+Example
+Filling done
+A
+A
+T
+[TABLE] A | C | A | C | T | M:0 | -∞ | -∞ | -∞ | -∞ | -∞ | Ix:-3 | -∞ | -∞ | -∞ | -∞ | -∞ | Iy:-3 | -4 | -5 | -6 | -7 | -8 | -∞ | 1 | -5 | -4 | -7 | -8 | -4 | -∞ | -∞ | -∞ | -∞ | -∞ | -∞ | -∞ | -2 | -3 | -4 | -5 | -∞ | -3 | 0 | -1 | -4 | -5 | -5 | -2 | -8 | -7 | -10 | -11 | -∞ | -∞ | -6 | -3 | -4 | -5 | -∞ | -6 | -3 | -1 | -2 | -3 | -6 | -3 | -3 | -4 | -7 | -8 | -∞ | -∞ | -9 | -6 | -4 | -5
+
+===== SLIDE 33 =====
+Example
+x:A--AT  y:ACACT
+TracebackT
+A
+C
+A
+C
+A
+A
+T
+[TABLE] M:0 | -∞ | -∞ | -∞ | -∞ | -∞ | Ix:-3 | -∞ | -∞ | -∞ | -∞ | -∞ | Iy:-3 | -4 | -5 | -6 | -7 | -8 | -∞ | 1 | -5 | -4 | -7 | -8 | -4 | -∞ | -∞ | -∞ | -∞ | -∞ | -∞ | -∞ | -2 | -3 | -4 | -5 | -∞ | -3 | 0 | -1 | -4 | -5 | -5 | -2 | -8 | -7 | -10 | -11 | -∞ | -∞ | -6 | -3 | -4 | -5 | -∞ | -6 | -3 | -1 | -2 | -3 | -6 | -3 | -3 | -4 | -7 | -8 | -∞ | -∞ | -9 | -6 | -4 | -5
+
+===== SLIDE 34 =====
+Example
+TracebackT
+Another alignmentx:AA--T  y:ACACT
+A
+C
+A
+C
+A
+A
+T
+[TABLE] M:0 | -∞ | -∞ | -∞ | -∞ | -∞ | Ix:-3 | -∞ | -∞ | -∞ | -∞ | -∞ | Iy:-3 | -4 | -5 | -6 | -7 | -8 | -∞ | 1 | -5 | -4 | -7 | -8 | -4 | -∞ | -∞ | -∞ | -∞ | -∞ | -∞ | -∞ | -2 | -3 | -4 | -5 | -∞ | -3 | 0 | -1 | -4 | -5 | -5 | -2 | -8 | -7 | -10 | -11 | -∞ | -∞ | -6 | -3 | -4 | -5 | -∞ | -6 | -3 | -1 | -2 | -3 | -6 | -3 | -3 | -4 | -7 | -8 | -∞ | -∞ | -9 | -6 | -4 | -5
+
+===== SLIDE 35 =====
+Example
+Another alignmentx:A-A-T  y:ACACT
+TracebackT
+A
+C
+A
+C
+A
+A
+T
+[TABLE] M:0 | -∞ | -∞ | -∞ | -∞ | -∞ | Ix:-3 | -∞ | -∞ | -∞ | -∞ | -∞ | Iy:-3 | -4 | -5 | -6 | -7 | -8 | -∞ | 1 | -5 | -4 | -7 | -8 | -4 | -∞ | -∞ | -∞ | -∞ | -∞ | -∞ | -∞ | -2 | -3 | -4 | -5 | -∞ | -3 | 0 | -1 | -4 | -5 | -5 | -2 | -8 | -7 | -10 | -11 | -∞ | -∞ | -6 | -3 | -4 | -5 | -∞ | -6 | -3 | -1 | -2 | -3 | -6 | -3 | -3 | -4 | -7 | -8 | -∞ | -∞ | -9 | -6 | -4 | -5
+
+===== SLIDE 36 =====
+Example
+Three optimized alignments
+1,	if	xi  y j
+s( xi , y j ) a=-3,b=-1
+
+1,	otherwise
+x:A--AT  y:ACACTx:AA--T  y:ACACTx:A-A-T  y:ACACT
+
+===== SLIDE 37 =====
+带仿射罚分的局部比对
+
+===== SLIDE 38 =====
+SW-DP with affine gap penalty
+
+===== SLIDE 39 =====
+SW-DP with affine gap penalty
+InitializationM (i, 0)  M (0, j)  0Ix (i, 0)  Ix (0, j)  I y (i, 0)  I y (0, j)  
+
+===== SLIDE 40 =====
+SW-DP with affine gap penalty
+TracebackStart at the largest of M(i,j)Stop at M(i,j)=0
+
+===== SLIDE 41 =====
+软件、服务器操作
+
+===== SLIDE 42 =====
+全局比对：Needleman-Wunsch算法
+https://blast.ncbi.nlm.nih.gov/Blast.cgi
+Bioinformatics, 2021, HUST
+
+===== SLIDE 43 =====
+Global Alignment
+
+===== SLIDE 44 =====
+NW-align
+https://zhanggroup.org/NW-align/
+NW-align: A protein sequence-sequence alignment program by Needleman-Wunsch dynamic programming algorithm (zhanggroup.org)
+
+===== SLIDE 45 =====
+局部比对：Smith-Waterman算法
+https://www.ebi.ac.uk/jdispatcher/psa/emboss_water
+Bioinformatics, 2021, HUST
+
+===== SLIDE 46 =====
+Biopython
+安装pip install biopythonconda install biopython加载from Bio import Alignfrom Bio.Seq import Seqseq1 = Seq("ACCGGT") seq2 = Seq("ACGT")## 全局比对aligner = Align.PairwiseAligner(); aligner.mode = "global"; alignments = aligner.align(seq1, seq2)## 局部比对aligner.mode = "local"; aligner.substitution_matrix = Align.substitution_matrices.load("BLOSUM62"); aligner.open_gap_score = -10; aligner.extend_gap_score = -1; test_alignments = aligner.align(seq1, seq2)##在这里，BLOSUM62指的是Bio.Align.substitution_matrices中加载的标准打分矩阵，用于提供匹配分数。-10表示空位开放罚分，-1表示空位扩展罚分。
+//更多请阅读：https://www.yiibai.com/biopython/biopython_sequence_alignments.html
+
+===== SLIDE 47 =====
+作业
+
+===== SLIDE 48 =====
+Homework 2
+Gap penalty: open=extension=-2
+[TABLE] A | T | G | C | A | 2 | 1 | -1 | -1 | T | 1 | 2 | -1 | -1 | G | -1 | -1 | 2 | 1 | C | -1 | -1 | 1 | 2
+
+===== SLIDE 49 =====
+Gap penalty: open=-2, extension=-1仿射罚分
+[TABLE] A | T | G | C | A | 2 | 1 | -1 | -1 | T | 1 | 2 | -1 | -1 | G | -1 | -1 | 2 | 1 | C | -1 | -1 | 1 | 2
+
+===== SLIDE 50 =====
+Your answers to 1,2 should include the followingAlignment matrixTrace back pathAlignment resultin a similar format as the examples given in the class.
+
+===== SLIDE 51 =====
+编程题目（本科生选作）：
+3*. Write a program to align any two protein sequences with  BLOSUM62 matrix, available at:  飞书共享文件夹下 /BLOSUM62.txtGap opening=-11  Gap extension=-1To examine whether your program is correct, you can compare your  result with the program at  NW-align: A protein sequence-sequence alignment program by Needleman-Wunsch dynamic programming algorithm (zhanggroup.org)

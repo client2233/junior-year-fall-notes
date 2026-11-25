@@ -1,0 +1,255 @@
+{
+  "main": {
+    "id": "4e5853744ab4fb17",
+    "type": "split",
+    "children": [
+      {
+        "id": "12ae7def32e0024e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e64828f9ef0ff064",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "泛函分析/03-拓扑向量空间.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "03-拓扑向量空间"
+            }
+          },
+          {
+            "id": "f39e58b81365274c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "数理方程/08-Green恒等式与Green表示公式.md",
+                "mode": "preview",
+                "source": true
+              },
+              "icon": "lucide-file",
+              "title": "08-Green恒等式与Green表示公式"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "d8492e5294e7e22a",
+    "type": "split",
+    "children": [
+      {
+        "id": "4279c3e433b5ce70",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ca2892e97fa6d861",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "025395c3ed51c967",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "9706902d70e20dcc",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "4da7ea5ec958fb90",
+    "type": "split",
+    "children": [
+      {
+        "id": "16a481a8908974f9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d7b63ff378356870",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "差分方法/一阶常微分方程初值解.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "反向链接"
+            }
+          },
+          {
+            "id": "73e5efefccc00b21",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "差分方法/一阶常微分方程初值解.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "出链"
+            }
+          },
+          {
+            "id": "9122669dfde006ef",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "4f7c805a59b78c9c",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "添加笔记属性"
+            }
+          },
+          {
+            "id": "aac17be32a85c040",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "差分方法/一阶常微分方程初值解.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "大纲"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "bases:新建数据库": false
+    }
+  },
+  "active": "f39e58b81365274c",
+  "lastOpenFiles": [
+    "数理方程/07-基本解与广义函数.md",
+    "数理方程/08-Green恒等式与Green表示公式.md",
+    "数理方程/13-奇点可去性与局部解析性.md",
+    "数理方程/11-Poisson积分公式与Dirichlet问题的可解性.md",
+    "数理方程/12-习题课.md",
+    "数理方程/05-下调和函数·弱极值原理与Hopf边界点引理.md",
+    "数理方程/04-调和函数·Harnack不等式与内部梯度估计.md",
+    "数理方程/06-Bochner方法与内部梯度估计.md",
+    "数理方程/03-调和函数·平均值性质与极值原理.md",
+    "信息论/02-数据处理不等式、Fano与信源编码定理.md",
+    "算法设计/03-贪心·区间调度与交换论证.md",
+    "算法设计/02-图与图的遍历.md",
+    "算法设计/01-算法分析基础.md",
+    "算法设计/07-分治·最近点对.md",
+    "生物信息学/03-2-局部比对与仿射罚分.md",
+    "生物信息学/03-1-全局比对·Needleman-Wunsch.md",
+    "数据结构/02-2-线性表·链表.md",
+    "数据结构/02-1-线性表·顺序表.md",
+    "数据结构/03-栈与队列.md",
+    "随机过程/05-期望与矩（直观）.md",
+    "随机过程/04-概率分布.md",
+    "随机过程/03-欧氏空间上的测度与可测函数.md",
+    "随机过程/02-测度的扩张.md",
+    "随机过程/01-测度与概率空间.md",
+    "数据结构/05-数组与特殊矩阵.md",
+    "数据结构/04-串.md",
+    "数据结构/sketch-05-2411209-strings.pdf",
+    "数据结构/sketch-04-2411209-stack-queue.pdf",
+    "图论/images/fig-21-4-交错圈重组.png",
+    "图论/images/fig-22-2-极大非最大.png",
+    "图论/images/fig-22-11-极大与最大的P4对照.png",
+    "图论/images/fig-20-3-C6三量对照.png",
+    "图论/images/fig-23-4-Petersen三色不可能.png",
+    "图论/images/fig-23-3-链的两种终点.png",
+    "图论/images/fig-23-2-Vizing扇.png",
+    "图论/images/fig-23-1-K4与C5边染色.png",
+    "离散数学",
+    "图论/images/fig-22-10-八面体因子分解.png",
+    "图论/images/fig-22-9-4正则非Hamilton.png",
+    "数据结构/sketch-01-2411209-intro.pdf",
+    "强化学习",
+    "数理方程",
+    "乐理/audio/和弦进行试听.html",
+    "乐理/audio/prog-1625-fast.mp3",
+    "乐理/audio/prog-2516.mp3",
+    "乐理/audio/prog-2345.mp3"
+  ]
+}

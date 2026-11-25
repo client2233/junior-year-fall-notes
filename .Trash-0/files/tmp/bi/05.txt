@@ -1,0 +1,189 @@
+# DECK 5: 03双序列比对-3-启发式算法2026版.pptx  (41 slides)
+
+===== SLIDE 1 =====
+双序列比对启发式算法
+
+===== SLIDE 2 =====
+双序列比对的算法
+Dot Matrix，点阵法动态规划算法：Global: Needleman-WunschLocal:	Smith-Waterman启发式算法（基于Word or k-tuple）：FASTA,  BLAST
+
+===== SLIDE 3 =====
+启发式算法Heuristic algorithms
+One of the major task of database mining is to search for homology  of a query sequence against a large sequence database such as  UniProt which involves millions of sequences. Although dynamic  programming can provide accurate solution of alignment, it is too  slow for large scale database searching.当我们使用动态规划算法来搜索数据库时，由于数据库序列条目非常大，这时候直接使用动态规划算法，会非常慢。Some heuristic algorithms, FASTA and BLAST, are designed to  provide approximate alignment but with significantly increased  speed (~50 times faster).一些启发式算法，例如FASTA，BLAST 被提出。这些算法可以提供近似的比对结果，但速度显著提高，约提高50倍。
+
+===== SLIDE 4 =====
+FASTA
+FASTPLipman & Pearson, Science (1985) 227, 1435FASTAPearson & Lipman, PNAS	(1988) 85, 2444.Lookup tableDumas & Ninio, NAR	(1982) 197.
+
+===== SLIDE 5 =====
+FASTA
+Four steps:Identify common k-word  (look-up table)Score diagonals (PAM) to  find 10 best diagonalsJoin high scoring diagonalsOptimize alignment by DP
+
+===== SLIDE 6 =====
+Dumas-Ninio look-up table
+Original question:For a sequence of length N, how to quickly find whether or not it  contains repeated subsequences (length =k)?Naïve methods: comparing every word with every other word of the  sequence.
+The time cost will increase with O(N2/2).J P Dumas and J Ninio. Efficient algorithms for folding and comparing nucleic acid  sequences. Nucleic Acids Res (1982) 10: 197-206.
+
+===== SLIDE 7 =====
+Dumas-Ninio look-up table (example of k=2)
+Question:Given a sequence “TCGGATTCGTACGGTACGGATC“, how to quickly find  the locations of all the most frequently appeared words (length=2)?1, Label the sequences by numbers
+2, Map the word sequence to numerical sequence 给片段编号
+pos.code
+[TABLE] 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | T | C | G | G | A | T | T | C | G | T | A | C | G | G | T | A | C | G | G | A | T | C | TC | CG | GG | GA | AT | TT | TC | CG | GT | TA | AC | CG | GG | GT | TA | AC | CG | GG | GA | AT | TC | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | GG | GC | AG | CG | GT | TT | AT | AA | GA | TA | TG | CA | CT | TC | AC | CC | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | T | C | G | G | A | T | T | C | G | T | A | C | G | G | T | A | C | G | G | A | T | C | TC | CG | GG | GA | AT | TT | TC | CG | GT | TA | AC | CG | GG | GT | TA | AC | CG | GG | GA | AT | TC | 14 | 4 | 1 | 9 | 7 | 6 | 14 | 4 | 5 | 10 | 15 | 4 | 1 | 5 | 10 | 15 | 4 | 1 | 9 | 7 | 14
+
+===== SLIDE 8 =====
+Dumas-Ninio look-up table (example of k=2)
+3, Construct T/M-matrix to record the location of all words in one scanpos.  code
+T[c]  片段的编号C，表示这种片段，最近一次出现的位置。例如 c=4，片段CG，分别出现在2,8,12,17, T[4]=17,  最近一次出现位置17. 再如c=14,片段TC，出现在位置1,7,21；T[14]=21. M[i], 序列中的位置i，与位置i的片段相同的、前一次出现位置T[7]=1。
+[TABLE] T-matrix | code | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | pos. | 3 | 2 | 6 | 5 | 4 | 1 | 7 | M-matrix | pos. | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | pos. | 1 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | T | C | G | G | A | T | T | C | G | T | A | C | G | G | T | A | C | G | G | A | T | C | TC | CG | GG | GA | AT | TT | TC | CG | GT | TA | AC | CG | GG | GT | TA | AC | CG | GG | GA | AT | TC | 14 | 4 | 1 | 9 | 7 | 6 | 14 | 4 | 5 | 10 | 15 | 4 | 1 | 5 | 10 | 15 | 4 | 1 | 9 | 7 | 14
+
+===== SLIDE 9 =====
+Dumas-Ninio look-up table (example of k=2)
+3, Construct T/M-matrix to record the location of all words in one scanpos.  code
+[TABLE] T-matrix | code | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | pos. | 3 | 2 | 6 | 5 | 4 | 1 | 8 | 7 | M-matrix | pos. | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | pos. | 1 | 2 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | T | C | G | G | A | T | T | C | G | T | A | C | G | G | T | A | C | G | G | A | T | C | TC | CG | GG | GA | AT | TT | TC | CG | GT | TA | AC | CG | GG | GT | TA | AC | CG | GG | GA | AT | TC | 14 | 4 | 1 | 9 | 7 | 6 | 14 | 4 | 5 | 10 | 15 | 4 | 1 | 5 | 10 | 15 | 4 | 1 | 9 | 7 | 14
+
+===== SLIDE 10 =====
+Dumas-Ninio look-up table (example of k=2)
+3, Construct T/M-matrix to record the location of all words in one scanpos.  code
+[TABLE] T-matrix | code | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | pos. | 3 | 2 | 6 | 5 | 4 | 1 | 8 | 9 | 10 | 7 | 11 | 12 | M-matrix | pos. | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | pos. | 1 | 2 | 8 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | T | C | G | G | A | T | T | C | G | T | A | C | G | G | T | A | C | G | G | A | T | C | TC | CG | GG | GA | AT | TT | TC | CG | GT | TA | AC | CG | GG | GT | TA | AC | CG | GG | GA | AT | TC | 14 | 4 | 1 | 9 | 7 | 6 | 14 | 4 | 5 | 10 | 15 | 4 | 1 | 5 | 10 | 15 | 4 | 1 | 9 | 7 | 14
+
+===== SLIDE 11 =====
+Dumas-Ninio look-up table (example of k=2)
+3, Construct T/M-matrix to record the location of all words in one scanpos.  code
+[TABLE] T-matrix | code | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | pos. | 3 | 2 | 6 | 5 | 4 | 1 | 8 | 9 | 10 | 7 | 11 | 13 | 12 | M-matrix | pos. | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | pos. | 1 | 2 | 8 | 3 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | T | C | G | G | A | T | T | C | G | T | A | C | G | G | T | A | C | G | G | A | T | C | TC | CG | GG | GA | AT | TT | TC | CG | GT | TA | AC | CG | GG | GT | TA | AC | CG | GG | GA | AT | TC | 14 | 4 | 1 | 9 | 7 | 6 | 14 | 4 | 5 | 10 | 15 | 4 | 1 | 5 | 10 | 15 | 4 | 1 | 9 | 7 | 14
+
+===== SLIDE 12 =====
+Dumas-Ninio look-up table (example of k=2)
+3, Construct T/M-matrix to record the location of all words in one scanpos.  code
+M(8)=2, indicates tat a dimer of rank 8 in the sequence occurred previously at position 2.
+[TABLE] T-matrix | code | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | pos. | 3 | 2 | 6 | 5 | 4 | 1 | 8 | 9 | 10 | 7 | 11 | 13 | 12 | 14 | 15 | 16 | 18 | 17 | 20 | 19 | 21 | M-matrix | pos. | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | pos. | 1 | 2 | 8 | 3 | 9 | 10 | 11 | 12 | 13 | 4 | 5 | 7 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | T | C | G | G | A | T | T | C | G | T | A | C | G | G | T | A | C | G | G | A | T | C | TC | CG | GG | GA | AT | TT | TC | CG | GT | TA | AC | CG | GG | GT | TA | AC | CG | GG | GA | AT | TC | 14 | 4 | 1 | 9 | 7 | 6 | 14 | 4 | 5 | 10 | 15 | 4 | 1 | 5 | 10 | 15 | 4 | 1 | 9 | 7 | 14
+
+===== SLIDE 13 =====
+Dumas-Ninio look-up table (example of k=2)
+pos.code
+Using lookup table, we can quickly trace back identity and location of words.‘GG’ appears at positions: 18, 13,3‘TC’ appears at positions: 21, 7,1  etc
+[TABLE] T-matrix | code | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | pos. | 3 | 2 | 6 | 5 | 4 | 1 | 8 | 9 | 10 | 7 | 11 | 13 | 12 | 14 | 15 | 16 | 18 | 17 | 20 | 19 | 21 | pos. | 18 | 0 | 0 | 17 | 14 | 6 | 20 | 0 | 19 | 15 | 0 | 0 | 0 | 21 | 16 | 0 | M-matrix | pos. | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | pos. | 1 | 2 | 8 | 3 | 9 | 10 | 11 | 12 | 13 | 4 | 5 | 7 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | T | C | G | G | A | T | T | C | G | T | A | C | G | G | T | A | C | G | G | A | T | C | TC | CG | GG | GA | AT | TT | TC | CG | GT | TA | AC | CG | GG | GT | TA | AC | CG | GG | GA | AT | TC | 14 | 4 | 1 | 9 | 7 | 6 | 14 | 4 | 5 | 10 | 15 | 4 | 1 | 5 | 10 | 15 | 4 | 1 | 9 | 7 | 14 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | GG | GC | AG | CG | GT | TT | AT | AA | GA | TA | TG | CA | CT | TC | AC | CC
+
+===== SLIDE 14 =====
+如果要查询  CG 在哪里？ CG在字典编号 4，先查  T[4]=17沿着M  往前找17 -> M[17]=12->M[12]=8 -> M[8]=2-> M[2]-> 0得到位置 17,12,8,2,   按从小到大排列   2,8,12,17T是入口，M为串起历史出现位置的链条。FASTA算法就是在此基础上，（1）寻找共同短片段，（2）寻找匹配集中对角线区域并重新打分；（3）连接可以衔接的高分片段，（4）在选定区域附近使用动态规划算法。启发式体现在候选区域的筛选上。较长相似区域通常包含共同短片段，利用这一先做，先筛选，再进行比对。减少计算量。
+
+===== SLIDE 15 =====
+Dumas-Ninio look-up table
+When we make an alignment, we only need to trace a  limited number paths to find the matched words,i.e. from T to MAdvantage: fast O(2N) vs. O(N2)Defect: only identical residue pairs can be aligned
+
+===== SLIDE 16 =====
+BLAST
+
+===== SLIDE 17 =====
+BLAST
+Altschul et al, Basic Local Alignment Search Tool. J Mol Biol  (1990) 215, 403.Two steps:Step 1. Search for exact matches of a small fixed length W between  the query and sequences in the database.For example, given the sequences AGTTATT and GCTTAAG and a word length  W = 3, BLAST would identify the matching substring TTA that is common to  both sequences. By default, W = 11 for nucleic acids.…AGTTATT…|||…GCTTAAG…
+
+===== SLIDE 18 =====
+BLAST
+Step 2. Try to extend the match in both directions, starting at the seed.
+The ungapped alignment process extends the initial seed match of length W  in each direction in an attempt to boost the alignment score. Insertions and  deletions are not considered during this stage.…AGTTATT…:|||:…GCTTAAG…The highest-scoring alignment will be returned.
+
+===== SLIDE 19 =====
+BLAST
+Different type of BLAST programs:早期的BLAST版本：无空位罚分新版本：Gap Penalties: Existence: 11,  Extension: 1Nucleotide-nucleotide BLAST (blastn)Protein-protein BLAST (blastp)Position-Specific Iterative BLAST (PSI-BLAST)Pattern Hit Initiated BLAST (Phi-BLAST)…
+
+===== SLIDE 20 =====
+显著性计算
+
+===== SLIDE 21 =====
+Significance of alignment in BLAST: E-value
+For any alignment, we can have an alignment score (S). The score itself  does not tell how significant it is.
+Definition: The E-value of an alignment with score S is the expected  number of alignments to be found with score ≥S in two random sequences  (of same lengths and letter compositions).
+This eq is an approx. Exact  solution is an open quiz
+E-value  Kmne  S
+K and λ represent natural scales for the search space and the scoring  system respectively. m and n are the sizes of the query and template  sequences.
+In general, the typical threshold for a good E-value from a BLAST  search is 0.001 or lower. An alignment of low E-value means that that  alignment is highly unique, and not due to error.
+For a proof of the equation, see Karlin & Altschul, PNAS (1990), 87, 2264; PNAS  (1993), 90, 5873.
+
+===== SLIDE 22 =====
+Poisson distribution
+If the expected number of an event to occur is λ, the  probability that there are exactly k occurrences (k = 0, 1, 2,
+ ke 
+...) is equal to
+p( X  k ) 
+k !
+
+===== SLIDE 23 =====
+Significance of alignment in BLAST: P-value
+Definition: The P-value of an alignment with score S is the likelihood that  two random sequences will have (at least one) alignments with score ≥ S.Relation between P-value and E-valueIf E(S) is the expected number of alignment with score ≥S,  the likelihood of getting exactly k such (independent)  alignments is
+E( S )k e E ( S )
+ ke 
+P-value 
+p( X  k ) 
+k !
+k !
+Likelihood of getting 0 such alignment:	e E ( S )Likelihood of getting at least one such alignment: 1  e E ( S )
+
+===== SLIDE 24 =====
+显著性计算
+Bioinformatics, 2021, HUST
+以蛋白质CDC28_YEAST 为例在酵母中的序列比对结果，如何计算序列比对的显著性？
+
+===== SLIDE 25 =====
+其中SNF1_YEAST的结果：Score: 111E-value: 2e-25问题： 如何计算Score？ 如何计算E-value？该值是何意义？
+
+===== SLIDE 26 =====
+求近似值
+
+===== SLIDE 27 =====
+因此，上例
+R=277
+
+===== SLIDE 28 =====
+上例 (2)
+R=277λ= 0.267K=0.0410m=208n=2,657,097
+ungapped
+Bioinformatics, 2021, HUST
+
+===== SLIDE 29 =====
+软件操作
+
+===== SLIDE 30 =====
+https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastSearch
+
+===== SLIDE 31 =====
+同源序列搜索
+同源序列通常具有相似的生物学功能同源关系的分析：直系同源 or 旁系同源？	直系同源（Orthologs）是指来自于不同物种的由垂直家系，也就是物种形成，进化而来的基因，并且典型的保留与原始基因相同的功能。也就是说，随着进化分支，一个基因进入了不同的物种，并保留了原有功能。这时，不同物种中的这个基因就属于直系同源。	旁系同源（Paralogs）是指在同一物种中的来源于基因复制的基因，可能会进化出新的但与原功能相关的功能来。直系同源序列的确定：相互最佳匹配旁系同源序列的确定：BLAST，序列比对及数 据库搜索，至少存在一个共有的功能结构域整体分析/蛋白质家族分析：系统发育树的构建
+
+===== SLIDE 32 =====
+例：Bub1的搜索实例
+芽殖酵母的Bub1:定位于动点，纺锤体检验点
+
+===== SLIDE 33 =====
+获得FASTA序列
+
+===== SLIDE 34 =====
+酵母的同源序列：旁系同源序列
+Bioinformatics, 2021, HUST
+
+===== SLIDE 35 =====
+Mad3: 旁系同源序列
+Bioinformatics, 2021, HUST
+
+===== SLIDE 36 =====
+人类同源序列：直系同源序列
+Bioinformatics, 2021, HUST
+
+===== SLIDE 37 =====
+人类Bub1？
+Bioinformatics, 2021, HUST
+
+===== SLIDE 38 =====
+在酵母中做比对
+Bioinformatics, 2021, HUST
+
+===== SLIDE 39 =====
+Best Hit!
+
+===== SLIDE 40 =====
+Next class
+Neighbor-joining method (for constructing phylogenetic tree) N. Saitou andM. Nei. The neighbor-joining Method: A new method for reconstructing  phylogenetic trees. Mol Biol Evol. (1987) 4: 406-425.UPGMA: https://en.wikipedia.org/wiki/UPGMAPSI-BLAST (The most often-used algorithm for sequence-profile alignment)S. F. Altschul et al. Gapped BLAST and PSI-BLAST: a new generation of protein database  search programs. (1997) 25, 3389-3402Hidden Markov Model (for multiple sequence alignment) Haussler, D., Krogh, A.,  Mian, I. S., & Sjölander, K. (1993). Protein modeling using hidden Markov models: Analysis  of globins. In: Proceedings of the Hawaii International Conference on System Sciences  volume 1 pp. 792-802.Sequence profile Gribskov, McLachlan, Eisenberg. Profile analysis: Detection of  distantly related proteins. PNAS (1987) 84, 4355-58Henikoff weight Steven Henikoff and Jorja G. Henikoff, Position-based  sequence weights, Journal of Molecular Biology. Volume 243, Issue 4, 4  November 1994, Pages 574-578
+
+===== SLIDE 41 =====
+Next class
+Profile-profile alignments:Anna R. Panchenko. Finding weak similarities between proteins by sequence profile  comparison. Nucleic Acids Research, 2003, Vol. 31, No. 2 683.Edgar & Sjolander, A comparison of scoring functions for protein sequence profile  alignment. Bioinformatics (2004) 20, 1301-8G Wang, R. Dunbrack JR. Scoring profile-to-profile sequence alignments. Protein  Sci. 13:1612-1626, 2004
